@@ -3,16 +3,20 @@ using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
 
-public class TerrainFace {
-    private Mesh mesh;
+public class TerrainFace
+{
+    private ShapeGenerator shapeGenerator;
+    private readonly Mesh mesh;
     // 分辨率
-    private int resolution;
-    private Vector3 localUp;
+    private readonly int resolution;
+    private readonly Vector3 localUp;
 
-    private Vector3 axisA;
-    private Vector3 axisB;
+    private readonly Vector3 axisA;
+    private readonly Vector3 axisB;
 
-    public TerrainFace(Mesh mesh, int resolution, Vector3 localUp) {
+    public TerrainFace(ShapeGenerator shapeGenerator,Mesh mesh, int resolution, Vector3 localUp)
+    {
+        this.shapeGenerator = shapeGenerator;
         this.resolution = resolution;
         this.localUp = localUp;
         this.mesh = mesh;
@@ -35,7 +39,7 @@ public class TerrainFace {
                 Vector2 percent = new Vector2(x, y) / (resolution - 1);
                 Vector3 pointOnUnitCube = localUp + (percent.x - .5f) * 2 * axisA + (percent.y - .5f) * 2 * axisB;
                 Vector3 pointOnUnitSphere = pointOnUnitCube.normalized;
-                vertices[i] = pointOnUnitSphere;
+                vertices[i] = shapeGenerator.CalculatePointOnPlanet(pointOnUnitSphere);
 
                 if (x != resolution - 1 && y != resolution - 1) {
                     triangles[triIndex] = i;
